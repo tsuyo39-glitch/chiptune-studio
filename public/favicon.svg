@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" shape-rendering="crispEdges">
+  <!-- ドット絵の 8 分音符 -->
+  <rect width="8" height="8" fill="#9bbc0f"/>
+  <rect x="4" y="1" width="1" height="1" fill="#0f380f"/>
+  <rect x="5" y="1" width="1" height="1" fill="#0f380f"/>
+  <rect x="4" y="2" width="1" height="1" fill="#0f380f"/>
+  <rect x="6" y="2" width="1" height="1" fill="#0f380f"/>
+  <rect x="4" y="3" width="1" height="1" fill="#0f380f"/>
+  <rect x="6" y="3" width="1" height="1" fill="#0f380f"/>
+  <rect x="4" y="4" width="1" height="1" fill="#0f380f"/>
+  <rect x="2" y="5" width="1" height="1" fill="#0f380f"/>
+  <rect x="3" y="5" width="1" height="1" fill="#0f380f"/>
+  <rect x="4" y="5" width="1" height="1" fill="#0f380f"/>
+  <rect x="2" y="6" width="1" height="1" fill="#0f380f"/>
+  <rect x="3" y="6" width="1" height="1" fill="#0f380f"/>
+  <rect x="4" y="6" width="1" height="1" fill="#0f380f"/>
+</svg>
