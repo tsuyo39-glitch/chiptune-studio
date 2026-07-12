@@ -3,7 +3,7 @@
 
 /*
  * ドット調テーマ（SPECIFICATION.md §5.3）
- * - ゲームボーイ風 4 階調グリーンを基本パレットとする
+ * - ファミコン風カラー（クリーム地・レッド・ブラック・ゴールド）を基本パレットとする
  * - アクセント色のみコンソールモード（html[data-console]）で切り替わる
  * - 角丸・グラデーション・ぼかしは使わない
  */
@@ -12,11 +12,12 @@
   --font-dot: 'DotGothic16', sans-serif;
   --font-num: 'Press Start 2P', monospace;
 
-  /* 4 階調グリーン（暗 → 明） */
-  --color-ink: #0f380f;
-  --color-shade: #306230;
-  --color-tone: #8bac0f;
-  --color-paper: #9bbc0f;
+  /* 基本パレット（暗 → 明） */
+  --color-ink: #26211f; /* ブラック（文字・ボーダー） */
+  --color-shade: #a8433b; /* レッド */
+  --color-tone: #e6d9bc; /* 濃いめのクリーム（ボタン面） */
+  --color-paper: #f2e8d3; /* クリーム（背景） */
+  --color-gold: #c9993f; /* ゴールド（ワンポイント用） */
 
   --color-accent: var(--console-accent);
 
@@ -27,16 +28,16 @@
 }
 
 :root,
-[data-console='gameboy'] {
-  --console-accent: #306230;
-}
-
 [data-console='famicom'] {
-  --console-accent: #a83232;
+  --console-accent: #a8433b;
 }
 
 [data-console='superfamicom'] {
   --console-accent: #58589a;
+}
+
+[data-console='gameboy'] {
+  --console-accent: #306230;
 }
 
 @layer base {
