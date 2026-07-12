@@ -15,6 +15,8 @@ export const BPM_MIN = 40;
 export const BPM_MAX = 240;
 export const DEFAULT_BPM = 120;
 
+export const DEFAULT_VELOCITY = 0.8;
+
 /** drums トラックのレーン数（pitch 0–3 をレーン番号として使う） */
 export const DRUM_LANE_COUNT = 4;
 
