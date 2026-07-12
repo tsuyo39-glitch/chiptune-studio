@@ -1,16 +1,36 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PixelButton } from './components/PixelButton';
 import { PixelSlider } from './components/PixelSlider';
+import { CONSOLE_MODES } from './model/project';
+import { useProjectStore } from './store/projectStore';
 
-// スライス 1 の仮画面。以降のスライスでヘッダー・トランスポート・
+// スライス 2 時点の仮画面。以降のスライスでヘッダー・トランスポート・
 // シーケンサーに置き換えていく（SPECIFICATION.md §5.1）。
 function App() {
   const [volume, setVolume] = useState(80);
+  const project = useProjectStore((s) => s.project);
+  const setConsoleMode = useProjectStore((s) => s.setConsoleMode);
+
+  useEffect(() => {
+    document.documentElement.dataset.console = project.consoleMode;
+  }, [project.consoleMode]);
 
   return (
     <div className="min-h-dvh">
       <header className="flex items-center gap-4 border-b-2 border-ink px-4 py-3">
         <h1 className="text-2xl tracking-widest">CHIPTUNE STUDIO</h1>
+        <span className="text-shade">{project.title}</span>
+        <div className="ml-auto flex gap-2">
+          {CONSOLE_MODES.map((mode) => (
+            <PixelButton
+              key={mode}
+              variant={mode === project.consoleMode ? 'accent' : 'normal'}
+              onClick={() => setConsoleMode(mode)}
+            >
+              {mode}
+            </PixelButton>
+          ))}
+        </div>
       </header>
 
       <main className="max-w-3xl space-y-10 p-6">
