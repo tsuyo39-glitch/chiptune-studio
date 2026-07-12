@@ -1,20 +1,22 @@
-import { useEffect } from 'react';
-import { getAudioOutput } from './audio/output';
-import { previewNote } from './audio/preview';
+import { useEffect, useState } from 'react';
 import { PixelButton } from './components/PixelButton';
 import { DrumGrid } from './features/drum-grid/DrumGrid';
+import { PianoRoll, type PitchedTrackId } from './features/piano-roll/PianoRoll';
 import { Transport } from './features/transport/Transport';
 import type { TrackId } from './model/project';
 import { useProjectStore } from './store/projectStore';
 
-function preview(trackId: TrackId, pitch: number): void {
-  const { ctx, master } = getAudioOutput();
-  previewNote(ctx, master, trackId, pitch);
-}
+const TRACK_LABELS: Record<TrackId, string> = {
+  piano: 'ピアノ',
+  guitar: 'ギター',
+  bass: 'ベース',
+  drums: 'ドラム',
+};
 
-// トラックタブ（スライス 7）までの仮画面。ドラム以外の楽器は試聴ボタンで確認する。
+// トラックタブ（音量 / M / S はスライス 7 で追加する）
 function App() {
   const project = useProjectStore((s) => s.project);
+  const [activeTrack, setActiveTrack] = useState<TrackId>('drums');
 
   useEffect(() => {
     document.documentElement.dataset.console = project.consoleMode;
@@ -29,20 +31,24 @@ function App() {
 
       <Transport />
 
-      <main className="space-y-8 p-4">
-        <section className="space-y-2">
-          <h2 className="text-lg">ドラム</h2>
-          <DrumGrid />
-        </section>
+      <main className="space-y-4 p-4">
+        <div className="flex gap-2">
+          {(Object.keys(TRACK_LABELS) as TrackId[]).map((trackId) => (
+            <PixelButton
+              key={trackId}
+              variant={trackId === activeTrack ? 'accent' : 'normal'}
+              onClick={() => setActiveTrack(trackId)}
+            >
+              {TRACK_LABELS[trackId]}
+            </PixelButton>
+          ))}
+        </div>
 
-        <section className="space-y-4">
-          <h2 className="text-lg">試聴（famicom）</h2>
-          <div className="flex flex-wrap items-center gap-4">
-            <PixelButton onClick={() => preview('piano', 60)}>ピアノ C4</PixelButton>
-            <PixelButton onClick={() => preview('guitar', 64)}>ギター E4</PixelButton>
-            <PixelButton onClick={() => preview('bass', 36)}>ベース C2</PixelButton>
-          </div>
-        </section>
+        {activeTrack === 'drums' ? (
+          <DrumGrid />
+        ) : (
+          <PianoRoll trackId={activeTrack as PitchedTrackId} />
+        )}
       </main>
     </div>
   );
