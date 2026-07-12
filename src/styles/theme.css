@@ -1,0 +1,107 @@
+@import 'tailwindcss';
+@import './fonts.css';
+
+/*
+ * ドット調テーマ（SPECIFICATION.md §5.3）
+ * - ゲームボーイ風 4 階調グリーンを基本パレットとする
+ * - アクセント色のみコンソールモード（html[data-console]）で切り替わる
+ * - 角丸・グラデーション・ぼかしは使わない
+ */
+
+@theme {
+  --font-dot: 'DotGothic16', sans-serif;
+  --font-num: 'Press Start 2P', monospace;
+
+  /* 4 階調グリーン（暗 → 明） */
+  --color-ink: #0f380f;
+  --color-shade: #306230;
+  --color-tone: #8bac0f;
+  --color-paper: #9bbc0f;
+
+  --color-accent: var(--console-accent);
+
+  /* ベタ塗り影・押下表現 */
+  --shadow-pixel: 4px 4px 0 0 var(--color-ink);
+
+  --radius-*: initial; /* 角丸ユーティリティを無効化 */
+}
+
+:root,
+[data-console='gameboy'] {
+  --console-accent: #306230;
+}
+
+[data-console='famicom'] {
+  --console-accent: #a83232;
+}
+
+[data-console='superfamicom'] {
+  --console-accent: #58589a;
+}
+
+@layer base {
+  html {
+    image-rendering: pixelated;
+  }
+
+  body {
+    @apply bg-paper font-dot text-ink;
+  }
+
+  ::selection {
+    @apply bg-ink text-paper;
+  }
+}
+
+/* ピクセル調レンジスライダー（PixelSlider が使用） */
+@layer components {
+  .pixel-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 24px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .pixel-slider::-webkit-slider-runnable-track {
+    height: 8px;
+    background: var(--color-shade);
+    border: 2px solid var(--color-ink);
+  }
+
+  .pixel-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 24px;
+    margin-top: -10px;
+    background: var(--color-paper);
+    border: 2px solid var(--color-ink);
+    box-shadow: 2px 2px 0 0 var(--color-ink);
+  }
+
+  .pixel-slider::-moz-range-track {
+    height: 8px;
+    background: var(--color-shade);
+    border: 2px solid var(--color-ink);
+  }
+
+  .pixel-slider::-moz-range-thumb {
+    width: 12px;
+    height: 20px;
+    border-radius: 0;
+    background: var(--color-paper);
+    border: 2px solid var(--color-ink);
+    box-shadow: 2px 2px 0 0 var(--color-ink);
+  }
+
+  .pixel-slider:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+
+  .pixel-slider:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
