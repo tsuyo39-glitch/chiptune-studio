@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { DRUM_LANE_NAMES } from '../../audio/instruments/drums';
 import { getAudioOutput } from '../../audio/output';
 import { previewNote } from '../../audio/preview';
+import { Playhead } from '../../components/Playhead';
 import { DEFAULT_VELOCITY, TOTAL_STEPS } from '../../model/project';
-import { usePlaybackStore } from '../../store/playbackStore';
 import { useProjectStore } from '../../store/projectStore';
 
 const CELL_W = 24;
@@ -19,30 +19,6 @@ function cellBorderClass(step: number): string {
   if (step % 16 === 0) return 'border-l-2 border-l-ink';
   if (step % 4 === 0) return 'border-l border-l-shade';
   return 'border-l border-l-tone';
-}
-
-/** 再生中のプレイヘッド。自動横スクロールで追従する */
-function Playhead({ scrollRef }: { scrollRef: React.RefObject<HTMLDivElement | null> }) {
-  const isPlaying = usePlaybackStore((s) => s.isPlaying);
-  const currentStep = usePlaybackStore((s) => s.currentStep);
-  const x = currentStep * CELL_W;
-
-  useEffect(() => {
-    const container = scrollRef.current;
-    if (!isPlaying || !container) return;
-    const margin = CELL_W * 4;
-    if (x < container.scrollLeft + margin || x > container.scrollLeft + container.clientWidth - margin) {
-      container.scrollLeft = x - margin;
-    }
-  }, [isPlaying, x, scrollRef]);
-
-  if (!isPlaying) return null;
-  return (
-    <div
-      className="pointer-events-none absolute top-0 bottom-0 w-[2px] bg-accent"
-      style={{ left: x }}
-    />
-  );
 }
 
 export function DrumGrid() {
@@ -161,7 +137,7 @@ export function DrumGrid() {
             </div>
           ))}
 
-          <Playhead scrollRef={scrollRef} />
+          <Playhead scrollRef={scrollRef} cellWidth={CELL_W} />
         </div>
       </div>
     </div>

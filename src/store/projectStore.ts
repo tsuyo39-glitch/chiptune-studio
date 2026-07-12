@@ -19,6 +19,8 @@ interface ProjectStore {
   addNote: (trackId: TrackId, note: Note) => void;
   /** step と pitch が一致するノートを削除する */
   removeNote: (trackId: TrackId, step: number, pitch: number) => void;
+  /** インデックス指定でノートを部分更新する（ピアノロールの移動・長さ変更用） */
+  updateNoteAt: (trackId: TrackId, index: number, patch: Partial<Note>) => void;
   /** JSON 読み込みなどでプロジェクト全体を置き換える */
   loadProject: (project: Project) => void;
 }
@@ -71,6 +73,13 @@ export const useProjectStore = create<ProjectStore>()((set) => ({
     set((s) => ({
       project: updateTrack(s.project, trackId, (t) => ({
         notes: t.notes.filter((n) => !(n.step === step && n.pitch === pitch)),
+      })),
+    })),
+
+  updateNoteAt: (trackId, index, patch) =>
+    set((s) => ({
+      project: updateTrack(s.project, trackId, (t) => ({
+        notes: t.notes.map((n, i) => (i === index ? { ...n, ...patch } : n)),
       })),
     })),
 
