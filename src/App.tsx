@@ -4,6 +4,7 @@ import { getAudioOutput } from './audio/output';
 import { previewNote } from './audio/preview';
 import { PixelButton } from './components/PixelButton';
 import { PixelSlider } from './components/PixelSlider';
+import { Transport } from './features/transport/Transport';
 import type { TrackId } from './model/project';
 import { useProjectStore } from './store/projectStore';
 
@@ -28,6 +29,8 @@ function App() {
         <h1 className="text-2xl tracking-widest">CHIPTUNE STUDIO</h1>
         <span className="text-shade">{project.title}</span>
       </header>
+
+      <Transport />
 
       <main className="max-w-3xl space-y-10 p-6">
         <section className="space-y-4">
