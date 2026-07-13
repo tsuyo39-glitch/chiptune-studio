@@ -4,6 +4,7 @@ import { DrumGrid } from './features/drum-grid/DrumGrid';
 import { ProjectFileButtons } from './features/export/ProjectFileButtons';
 import { WavExportButton } from './features/export/WavExportButton';
 import { PianoRoll, type PitchedTrackId } from './features/piano-roll/PianoRoll';
+import { UpdateToast } from './features/pwa/UpdateToast';
 import { TrackTabs } from './features/tracks/TrackTabs';
 import { Transport } from './features/transport/Transport';
 import type { TrackId } from './model/project';
@@ -49,6 +50,8 @@ function App() {
           <PianoRoll trackId={activeTrack as PitchedTrackId} />
         )}
       </main>
+
+      <UpdateToast />
     </div>
   );
 }
