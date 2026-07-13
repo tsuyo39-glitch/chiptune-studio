@@ -37,7 +37,7 @@ export function DrumGrid() {
     if (add && !has) {
       addNote('drums', { step, pitch: lane, length: 1, velocity: DEFAULT_VELOCITY });
       const { ctx, master } = getAudioOutput();
-      previewNote(ctx, master, 'drums', lane);
+      previewNote(ctx, master, 'drums', lane, useProjectStore.getState().project.consoleMode);
     } else if (!add && has) {
       removeNote('drums', step, lane);
     }
