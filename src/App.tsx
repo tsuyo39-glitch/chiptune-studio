@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DrumGrid } from './features/drum-grid/DrumGrid';
 import { ProjectFileButtons } from './features/export/ProjectFileButtons';
+import { WavExportButton } from './features/export/WavExportButton';
 import { PianoRoll, type PitchedTrackId } from './features/piano-roll/PianoRoll';
 import { TrackTabs } from './features/tracks/TrackTabs';
 import { Transport } from './features/transport/Transport';
@@ -27,8 +28,9 @@ function App() {
           aria-label="プロジェクト名"
           className="w-48 border-2 border-ink bg-paper px-2 py-1 text-sm text-shade focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
         />
-        <div className="ml-auto">
+        <div className="ml-auto flex gap-2">
           <ProjectFileButtons />
+          <WavExportButton />
         </div>
       </header>
 
