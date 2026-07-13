@@ -17,8 +17,8 @@ export const DEFAULT_BPM = 120;
 
 export const DEFAULT_VELOCITY = 0.8;
 
-/** drums トラックのレーン数（pitch 0–3 をレーン番号として使う） */
-export const DRUM_LANE_COUNT = 4;
+/** drums トラックのレーン数（pitch 0–7 をレーン番号として使う） */
+export const DRUM_LANE_COUNT = 8;
 
 /** MIDI ノート番号の有効範囲 */
 export const PITCH_MIN = 0;

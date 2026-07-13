@@ -97,8 +97,8 @@ describe('validateProject', () => {
       return base;
     };
     expect(validateProject(withDrumNote({ step: 0, pitch: 0, length: 2, velocity: 1 })).ok).toBe(false);
-    expect(validateProject(withDrumNote({ step: 0, pitch: 4, length: 1, velocity: 1 })).ok).toBe(false);
-    expect(validateProject(withDrumNote({ step: 0, pitch: 3, length: 1, velocity: 1 })).ok).toBe(true);
+    expect(validateProject(withDrumNote({ step: 0, pitch: 8, length: 1, velocity: 1 })).ok).toBe(false);
+    expect(validateProject(withDrumNote({ step: 0, pitch: 7, length: 1, velocity: 1 })).ok).toBe(true);
   });
 
   it('正しいプロジェクトは project を返す', () => {

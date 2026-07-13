@@ -11,8 +11,8 @@ const ROW_H = 36;
 const HEADER_H = 24;
 const GRID_WIDTH = TOTAL_STEPS * CELL_W;
 
-/** 表示順（上から）: ハット開 / ハット閉 / スネア / キック */
-const LANES = [3, 2, 1, 0] as const;
+/** 表示順（上から）: Crash / HH Open / HH Close / Cowbell / Tom / Clap / Snare / Kick */
+const LANES = [6, 3, 2, 7, 4, 5, 1, 0] as const;
 
 /** 小節境界は濃く、拍は中間、その他は薄い罫線（SPECIFICATION.md §5.2） */
 function cellBorderClass(step: number): string {
