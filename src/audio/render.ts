@@ -3,6 +3,7 @@
 
 import { TOTAL_STEPS, type Project } from '../model/project';
 import { createConsoleChain } from './consoles';
+import { MASTER_GAIN } from './mix';
 import { scheduleProjectStep, stepDurationSec } from './scheduler';
 import { audioBufferToWavBlob } from './wav';
 
@@ -10,9 +11,6 @@ export const EXPORT_SAMPLE_RATE = 44100;
 
 /** リリース余韻（秒）。ループ 1 周分の後に付ける */
 const RELEASE_TAIL_SEC = 1;
-
-/** マスター音量。リアルタイム再生（audio/output.ts）と同じ値にする */
-const MASTER_GAIN = 0.5;
 
 export async function renderProject(project: Project): Promise<AudioBuffer> {
   const stepDuration = stepDurationSec(project.bpm);

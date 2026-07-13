@@ -51,7 +51,7 @@ export function TrackTabs({ activeTrack, onSelect }: TrackTabsProps) {
 
   return (
     <div className="flex flex-wrap gap-2">
-      {tracks.map((track) => {
+      {tracks.map((track, index) => {
         const active = track.id === activeTrack;
         return (
           <div
@@ -63,6 +63,8 @@ export function TrackTabs({ activeTrack, onSelect }: TrackTabsProps) {
             <button
               type="button"
               onClick={() => onSelect(track.id)}
+              aria-keyshortcuts={String(index + 1)}
+              title={`${TRACK_LABELS[track.id]} (${index + 1})`}
               className={`px-1 select-none ${track.mute ? 'opacity-40' : ''} ${
                 active ? '' : 'text-shade'
               } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink`}
@@ -71,14 +73,14 @@ export function TrackTabs({ activeTrack, onSelect }: TrackTabsProps) {
             </button>
             <SmallToggle
               label="M"
-              title="ミュート"
+              title={active ? 'ミュート (M)' : 'ミュート'}
               on={track.mute}
               onClass="bg-accent text-paper"
               onClick={() => toggleMute(track.id)}
             />
             <SmallToggle
               label="S"
-              title="ソロ"
+              title={active ? 'ソロ (S)' : 'ソロ'}
               on={track.solo}
               onClass="bg-gold text-ink"
               onClick={() => toggleSolo(track.id)}
