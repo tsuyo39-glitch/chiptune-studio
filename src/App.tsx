@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ConsoleModeSwitch } from './features/console-mode/ConsoleModeSwitch';
 import { DrumGrid } from './features/drum-grid/DrumGrid';
 import { ProjectFileButtons } from './features/export/ProjectFileButtons';
 import { WavExportButton } from './features/export/WavExportButton';
@@ -28,9 +29,12 @@ function App() {
           aria-label="プロジェクト名"
           className="w-48 border-2 border-ink bg-paper px-2 py-1 text-sm text-shade focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
         />
-        <div className="ml-auto flex gap-2">
-          <ProjectFileButtons />
-          <WavExportButton />
+        <div className="ml-auto flex items-center gap-6">
+          <ConsoleModeSwitch />
+          <div className="flex gap-2">
+            <ProjectFileButtons />
+            <WavExportButton />
+          </div>
         </div>
       </header>
 

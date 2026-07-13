@@ -35,7 +35,7 @@ type DragState =
 
 function preview(trackId: PitchedTrackId, pitch: number): void {
   const { ctx, master } = getAudioOutput();
-  previewNote(ctx, master, trackId, pitch);
+  previewNote(ctx, master, trackId, pitch, useProjectStore.getState().project.consoleMode);
 }
 
 export function PianoRoll({ trackId }: { trackId: PitchedTrackId }) {

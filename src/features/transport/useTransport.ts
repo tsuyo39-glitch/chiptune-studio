@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { createConsoleChain } from '../../audio/consoles';
 import { scheduleMetronomeClick } from '../../audio/metronome';
 import { getAudioOutput } from '../../audio/output';
 import { Scheduler, scheduleProjectStep } from '../../audio/scheduler';
@@ -10,6 +11,8 @@ interface ActivePlayback {
   /** 停止時に切断して、先読み済みの音も止めるためのゲート */
   gate: GainNode;
   rafId: number;
+  /** 再生中のコンソールモード変更を反映するための購読解除 */
+  unsubscribeConsoleMode: () => void;
 }
 
 export function useTransport(): { play: () => void; stop: () => void; toggle: () => void } {
@@ -20,6 +23,7 @@ export function useTransport(): { play: () => void; stop: () => void; toggle: ()
     if (!active) return;
     active.scheduler.stop();
     active.gate.disconnect();
+    active.unsubscribeConsoleMode();
     cancelAnimationFrame(active.rafId);
     activeRef.current = null;
     usePlaybackStore.getState().setPlaying(false);
@@ -30,7 +34,14 @@ export function useTransport(): { play: () => void; stop: () => void; toggle: ()
     if (activeRef.current) return;
     const { ctx, master } = getAudioOutput();
     const gate = ctx.createGain();
-    gate.connect(master);
+    gate.connect(createConsoleChain(ctx, useProjectStore.getState().project.consoleMode, master));
+
+    // 再生中にモードが変わったら質感チェーンを差し替える
+    const unsubscribeConsoleMode = useProjectStore.subscribe((state, prevState) => {
+      if (state.project.consoleMode === prevState.project.consoleMode) return;
+      gate.disconnect();
+      gate.connect(createConsoleChain(ctx, state.project.consoleMode, master));
+    });
 
     const scheduler = new Scheduler({
       ctx,
@@ -50,7 +61,12 @@ export function useTransport(): { play: () => void; stop: () => void; toggle: ()
       usePlaybackStore.getState().setCurrentStep(active.scheduler.getCurrentStep());
       active.rafId = requestAnimationFrame(updatePlayhead);
     };
-    activeRef.current = { scheduler, gate, rafId: requestAnimationFrame(updatePlayhead) };
+    activeRef.current = {
+      scheduler,
+      gate,
+      rafId: requestAnimationFrame(updatePlayhead),
+      unsubscribeConsoleMode,
+    };
     usePlaybackStore.getState().setPlaying(true);
   }, []);
 

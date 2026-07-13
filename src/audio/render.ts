@@ -2,6 +2,7 @@
 // リアルタイム再生と同じ scheduleProjectStep / 楽器コードを使う。
 
 import { TOTAL_STEPS, type Project } from '../model/project';
+import { createConsoleChain } from './consoles';
 import { scheduleProjectStep, stepDurationSec } from './scheduler';
 import { audioBufferToWavBlob } from './wav';
 
@@ -25,9 +26,10 @@ export async function renderProject(project: Project): Promise<AudioBuffer> {
   const master = ctx.createGain();
   master.gain.value = MASTER_GAIN;
   master.connect(ctx.destination);
+  const chain = createConsoleChain(ctx, project.consoleMode, master);
 
   for (let step = 0; step < TOTAL_STEPS; step++) {
-    scheduleProjectStep(ctx, master, project, step, step * stepDuration, stepDuration);
+    scheduleProjectStep(ctx, chain, project, step, step * stepDuration, stepDuration);
   }
   return ctx.startRendering();
 }

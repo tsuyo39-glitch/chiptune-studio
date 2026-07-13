@@ -1,5 +1,6 @@
-// コンソールモード別の波形・質感の素材置き場（SPECIFICATION.md §3.3 / §4.1）。
-// スライス 3 時点は famicom のみ。gameboy / superfamicom はスライス 10 で追加する。
+// コンソールモード別の波形・質感の定義（SPECIFICATION.md §3.3 / §4.1）。
+
+import type { ConsoleMode } from '../model/project';
 
 const pulseWaveCache = new WeakMap<BaseAudioContext, Map<number, PeriodicWave>>();
 
@@ -41,6 +42,52 @@ export function getNoiseBuffer(ctx: BaseAudioContext): AudioBuffer {
   }
   noiseBufferCache.set(ctx, buffer);
   return buffer;
+}
+
+/**
+ * WaveShaper 用の量子化カーブ。levels 段（4bit なら 16）に階段化して
+ * ゲームボーイ風のビットクラッシュ質感を作る。
+ */
+export function makeBitcrushCurve(levels: number, samples = 1024): Float32Array<ArrayBuffer> {
+  const curve = new Float32Array(samples);
+  for (let i = 0; i < samples; i++) {
+    const x = (i / (samples - 1)) * 2 - 1;
+    const quantized = Math.round(((x + 1) / 2) * (levels - 1)) / (levels - 1);
+    curve[i] = quantized * 2 - 1;
+  }
+  return curve;
+}
+
+/**
+ * コンソールモードの質感を与えるノードを destination の手前に挿入し、
+ * 楽器の接続先となる入口ノードを返す（SPECIFICATION.md §3.3）。
+ * - famicom: 素通し
+ * - gameboy: 4bit 量子化（ビットクラッシュ）
+ * - superfamicom: ローパスで柔らかく、擬似的に 32kHz サンプル感を出す
+ */
+export function createConsoleChain(
+  ctx: BaseAudioContext,
+  mode: ConsoleMode,
+  destination: AudioNode,
+): AudioNode {
+  switch (mode) {
+    case 'famicom':
+      return destination;
+    case 'gameboy': {
+      const crusher = ctx.createWaveShaper();
+      crusher.curve = makeBitcrushCurve(16);
+      crusher.connect(destination);
+      return crusher;
+    }
+    case 'superfamicom': {
+      const lowpass = ctx.createBiquadFilter();
+      lowpass.type = 'lowpass';
+      lowpass.frequency.value = 7000;
+      lowpass.Q.value = 0.5;
+      lowpass.connect(destination);
+      return lowpass;
+    }
+  }
 }
 
 /**
