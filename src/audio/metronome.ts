@@ -12,7 +12,8 @@ export function scheduleMetronomeClick(
   osc.frequency.value = accent ? 1760 : 1175;
 
   const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0.25, time);
+  // 編集中のガイドとして聞こえつつ、曲より前に出ない音量にする
+  gain.gain.setValueAtTime(accent ? 0.16 : 0.12, time);
   gain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
   gain.gain.setValueAtTime(0, time + 0.03);
 

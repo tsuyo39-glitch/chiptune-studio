@@ -4,6 +4,7 @@
 
 import { STEPS_PER_BAR, TOTAL_STEPS, type Project, type TrackId } from '../model/project';
 import { instruments } from './instruments';
+import { balancedVelocity } from './mix';
 
 /** 16 分音符 1 ステップの長さ（秒） */
 export function stepDurationSec(bpm: number): number {
@@ -42,7 +43,7 @@ export function scheduleProjectStep(
       instruments[track.id](ctx, destination, {
         time,
         pitch: note.pitch,
-        velocity: note.velocity * track.volume,
+        velocity: balancedVelocity(track.id, note.velocity * track.volume),
         duration: note.length * stepDuration,
       });
     }

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { stepToPosition } from '../../audio/scheduler';
 import { PixelButton } from '../../components/PixelButton';
+import { MetronomeIcon, PlayIcon, StopIcon } from '../../components/PixelIcons';
 import { BPM_MAX, BPM_MIN } from '../../model/project';
 import { usePlaybackStore } from '../../store/playbackStore';
 import { useProjectStore } from '../../store/projectStore';
-import { useTransport } from './useTransport';
 
 function BpmInput() {
   const bpm = useProjectStore((s) => s.project.bpm);
@@ -44,45 +44,35 @@ function BpmInput() {
   );
 }
 
-export function Transport() {
-  const { toggle } = useTransport();
+export function Transport({ onToggle }: { onToggle: () => void }) {
   const isPlaying = usePlaybackStore((s) => s.isPlaying);
   const metronomeEnabled = usePlaybackStore((s) => s.metronomeEnabled);
   const toggleMetronome = usePlaybackStore((s) => s.toggleMetronome);
   const currentStep = usePlaybackStore((s) => s.currentStep);
   const { bar, beat } = stepToPosition(currentStep);
 
-  // スペースキーで再生/停止（入力欄フォーカス中は除く）
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.code !== 'Space') return;
-      const target = e.target;
-      if (
-        target instanceof HTMLElement &&
-        (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')
-      ) {
-        return;
-      }
-      e.preventDefault();
-      toggle();
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [toggle]);
-
   return (
     <div className="flex flex-wrap items-center gap-4 border-b-2 border-ink px-4 py-3">
       <PixelButton
         variant={isPlaying ? 'accent' : 'normal'}
-        onClick={toggle}
+        onClick={onToggle}
         aria-label={isPlaying ? '停止' : '再生'}
-        className="w-14"
+        aria-keyshortcuts="Space"
+        title={`${isPlaying ? '停止' : '再生'} (Space)`}
+        className="flex w-14 items-center justify-center"
       >
-        {isPlaying ? '■' : '▶'}
+        {isPlaying ? <StopIcon /> : <PlayIcon />}
       </PixelButton>
       <BpmInput />
-      <PixelButton variant={metronomeEnabled ? 'accent' : 'normal'} onClick={toggleMetronome}>
-        メトロノーム
+      <PixelButton
+        variant={metronomeEnabled ? 'accent' : 'normal'}
+        onClick={toggleMetronome}
+        aria-label="メトロノーム"
+        aria-pressed={metronomeEnabled}
+        title="メトロノーム"
+        className="flex items-center justify-center"
+      >
+        <MetronomeIcon />
       </PixelButton>
       <span className="ml-auto font-num text-sm" aria-label="再生位置（小節:拍）">
         {bar}:{beat}
