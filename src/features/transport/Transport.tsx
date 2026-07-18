@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { stepToPosition } from '../../audio/scheduler';
 import { PixelButton } from '../../components/PixelButton';
+import { MetronomeIcon, PlayIcon, StopIcon } from '../../components/PixelIcons';
 import { BPM_MAX, BPM_MIN } from '../../model/project';
 import { usePlaybackStore } from '../../store/playbackStore';
 import { useProjectStore } from '../../store/projectStore';
@@ -58,13 +59,20 @@ export function Transport({ onToggle }: { onToggle: () => void }) {
         aria-label={isPlaying ? '停止' : '再生'}
         aria-keyshortcuts="Space"
         title={`${isPlaying ? '停止' : '再生'} (Space)`}
-        className="w-14"
+        className="flex w-14 items-center justify-center"
       >
-        {isPlaying ? '■' : '▶'}
+        {isPlaying ? <StopIcon /> : <PlayIcon />}
       </PixelButton>
       <BpmInput />
-      <PixelButton variant={metronomeEnabled ? 'accent' : 'normal'} onClick={toggleMetronome}>
-        メトロノーム
+      <PixelButton
+        variant={metronomeEnabled ? 'accent' : 'normal'}
+        onClick={toggleMetronome}
+        aria-label="メトロノーム"
+        aria-pressed={metronomeEnabled}
+        title="メトロノーム"
+        className="flex items-center justify-center"
+      >
+        <MetronomeIcon />
       </PixelButton>
       <span className="ml-auto font-num text-sm" aria-label="再生位置（小節:拍）">
         {bar}:{beat}
