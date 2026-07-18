@@ -189,7 +189,7 @@ export function PianoRoll({ trackId }: { trackId: PitchedTrackId }) {
                 <div
                   key={pitch}
                   className={`flex items-center px-1 font-num text-[9px] ${
-                    pitch % 12 === 0 ? 'border-t border-ink' : ''
+                    pitch % 12 === 11 ? 'border-t border-ink' : ''
                   } ${isBlackKey(pitch) ? 'bg-shade/30' : ''}`}
                   style={{ height: ROW_H }}
                 >
@@ -216,7 +216,7 @@ export function PianoRoll({ trackId }: { trackId: PitchedTrackId }) {
                 <div
                   key={pitch}
                   className={`${isBlackKey(pitch) ? 'bg-tone/60' : ''} ${
-                    pitch % 12 === 0 ? 'border-t border-ink' : 'border-t border-tone/60'
+                    pitch % 12 === 11 ? 'border-t border-ink' : 'border-t border-tone/60'
                   }`}
                   style={{ height: ROW_H }}
                 />
