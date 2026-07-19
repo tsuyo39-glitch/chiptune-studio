@@ -92,6 +92,21 @@ export function PianoRoll({ trackId }: { trackId: PitchedTrackId }) {
     const index = noteIndexAt(cell.step, cell.pitch);
     if (index >= 0) {
       const note = notesRef.current[index]!;
+
+      // Option/Alt+ドラッグ: 元を残して複製を掴む（複製に対して move ドラッグ）
+      if (e.altKey) {
+        addNote(trackId, { ...note });
+        dragRef.current = {
+          mode: 'move',
+          index: notesRef.current.length, // set 反映前なので追加後のインデックス
+          grabOffset: cell.step - note.step,
+          moved: true, // クリック=削除の対象にしない
+          lastPitch: note.pitch,
+          noteStepPitch: [note.step, note.pitch],
+        };
+        return;
+      }
+
       const onRightEdge = cell.step === note.step + note.length - 1 && cell.fracX > 0.5;
       dragRef.current = onRightEdge
         ? { mode: 'resize', index, noteStep: note.step, changed: false, noteStepPitch: [note.step, note.pitch] }
